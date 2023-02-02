@@ -3,6 +3,10 @@ function makeFly(obj) {
     let coordX = 10;
     let coordY = 10;
     let velX = Math.floor(Math.random() * roundN - 2);
+    if (velX === 0 && velY === 0) {
+        velX = 1;
+        velY = 1;
+    }
     let velY = Math.floor(Math.random() * roundN - 2);
     obj.setAttribute("coordX", coordX);
     obj.setAttribute("coordY", coordY);
@@ -17,6 +21,33 @@ function makeFly(obj) {
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);   
 }
+
+function apdateLeaderbord () {
+    for (let j = 0; j < 5; j++) {
+        if (leaders[j].points < currentPoints) {
+            let playerName = prompt("Please enter your name");
+            const newLeader = {
+                player: playerName,
+                points: currentPoints,
+            }
+            leaders.splice(j, 1, newLeader);
+            break;
+        }
+    }
+
+    leaderbord.innerHTML = "";
+    const h2 = document.createElement("h2");
+    h2.appendChild(document.createTextNode("Leaders"));
+    leaderbord.appendChild(h2);
+    for (let j = 0; j < 5; j++) {
+        const newLeaderDiv = document.createElement("div");
+        newLeaderDiv.classList.add("name");
+        const content = document.createTextNode(`${j+1} ${leaders[j].player} ${leaders[j].points}pt`);
+        newLeaderDiv.appendChild(content);
+        leaderbord.appendChild(newLeaderDiv);
+    }
+}
+
 
 function moveObj(obj) {
     let x = +obj.getAttribute("coordX");
@@ -56,6 +87,7 @@ function moveObj(obj) {
 
 
 const root = document.getElementById('root')
+const leaderbord = document.getElementById("leaderbord")
 const error = document.createElement('p')
 const points = document.createElement('p')
 const level = document.createElement('p')
@@ -76,6 +108,29 @@ const levelsMap = {
         speed: 3
     },
 }
+
+leaders = [
+    {
+        player: "Boris",
+        points: 20
+    },
+    {
+        player: "Anna",
+        points: 19
+    },
+    {
+        player: "Egor",
+        points: 10
+    },
+    {
+        player: "Victor",
+        points: 5
+    },
+    {
+        player: "Elan",
+        points: 3
+    }
+]
 
 let boxesId = 0
 let currentLevel = 1
@@ -198,3 +253,7 @@ const levelUp = () => {
 }
 
 generateField()
+
+currentPoints = 15;
+apdateLeaderbord();
+console.log(leaders);
