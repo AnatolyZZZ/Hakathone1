@@ -12,7 +12,7 @@ function makeFly(obj) {
     let speed = levelsMap[currentLevel].speed;
     
     speed = Math.floor(20/speed);
-    console.log(`speed: ${speed}`);
+    // console.log(`speed: ${speed}`);
     
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);   
@@ -56,7 +56,8 @@ function moveObj(obj) {
 
 
 const root = document.getElementById('root')
-const error = document.createElement('p')
+const alertMsg = document.createElement('p')
+alertMsg.classList.add('alert')
 const points = document.createElement('p')
 const level = document.createElement('p')
 const counter = document.createElement('p')
@@ -86,8 +87,7 @@ let boxesId = 0
 let countDownId
 
 const onDragStart = (e) => {
-    console.log(e.target.id)
-    error.style.display = 'none'
+    alertMsg.style.display = 'none'
     e.dataTransfer.setData("text/plain", e.target.id)
 }
 
@@ -123,7 +123,7 @@ const onDrop = (e) => {
         }
         points.innerText = currentPoints
     } else {
-        error.style.display = 'block'
+        alertMsg.style.display = 'block'
     }
 }
 
@@ -157,10 +157,10 @@ const generateZones = (color) => {
     root.append(zone)
 }
 
-const createError = () => {
-    error.classList.add('error')
-    error.append('Wrooong!')
-    root.append(error)
+const generateError = () => {
+    alertMsg.style.color = 'red'
+    alertMsg.append('Wrooong!')
+    root.append(alertMsg)
 }
 
 
@@ -173,7 +173,7 @@ const generateField = () => {
         generateZones(color)
     }
     generateInfo()
-    createError()
+    generateError()
     let id = countDown()
 }
 
@@ -215,19 +215,16 @@ const countDown = () => {
 
 const finishGame = (bool = false) => {
     root.innerHTML = ''
-    const finishAlert = document.createElement('p')
     if(bool){
-        finishAlert.innerText = 'You won'
-        finishAlert.classList.add('finishAlert')
-        finishAlert.style.color = 'green'
+        alertMsg.innerText = 'You won'
+        alertMsg.style.color = 'green'
     } else {
-        finishAlert.innerText = 'You lost'
-        finishAlert.classList.add('finishAlert')
-        finishAlert.style.color = 'red'
+        alertMsg.innerText = 'You lost'
+        alertMsg.style.color = 'red'
     }
     
-    
-    root.append(finishAlert)
+    alertMsg.style.display = 'block'
+    root.append(alertMsg)
 }
 
 generateField()
