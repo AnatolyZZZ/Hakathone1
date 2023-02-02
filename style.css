@@ -21,9 +21,9 @@ body {
 }
 
 .box {
-    height: 100px;
-    width: 100px;
-    background: yellow;
+    height: 50px;
+    width: 50px;
+    /* background: yellow; */
     border: 1px solid black;
     margin: 5px;
     align-self: flex-start;
@@ -31,9 +31,9 @@ body {
 }
 
 .zone {
-    height: 150px;
-    width: 150px;
-    background: rgb(67, 236, 0);
+    height: 100px;
+    width: 100px;
+    /* background: rgb(67, 236, 0); */
     margin: 5px;
     display: flex;
     flex-wrap: wrap;
@@ -41,8 +41,8 @@ body {
 }
 
 .dropped {
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 30px;
 }
 
 .error {
@@ -51,4 +51,18 @@ body {
     color: red;
     top: 250px;
     left: 250px;
+}
+
+.points {
+    position: absolute;
+    font-size: 50px;
+    top: 50px;
+    left: -50px;
+}
+
+.level {
+    position: absolute;
+    font-size: 50px;
+    top: 0;
+    left: -50px;
 }
