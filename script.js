@@ -23,13 +23,13 @@ function moveObj(obj) {
 
     if (x <= 0 || x >= 400) {
         vX = -vX;
-        // console.log(`coordinate x ${x} speed vX ${vX}`);
-        // console.log(`coordinate y ${y} speed vY ${vY}`);
+        console.log(`coordinate x ${x} speed vX ${vX}`);
+        console.log(`coordinate y ${y} speed vY ${vY}`);
     }
     if (y <= 0 || y >= 400) {
         vY = -vY;
-        // console.log(`coordinate x ${x} speed vX ${vX}`);
-        // console.log(`coordinate y ${y} speed vY ${vY}`);
+        console.log(`coordinate x ${x} speed vX ${vX}`);
+        console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
     obj.style.left = `${x}px`;
@@ -148,7 +148,6 @@ const generateField = () => {
 
     for (let i = 0; i < colorsAmt; i++) {
         let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
-        console.log(color)
         generateBoxes(color, boxesAmt)
         generateZones(color)
     }
@@ -161,10 +160,14 @@ const generatePointsAndLevel = () => {
     points.classList.add('points')
     points.innerText = currentPoints
     root.append(points)
+
     level.classList.add('level')
     level.innerText = currentLevel
     root.append(level)
+
+      
 }
+
 
 const levelUp = () => {
     currentLevel++
