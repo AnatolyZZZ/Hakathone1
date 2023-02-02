@@ -178,7 +178,6 @@ const onDrop = (e) => {
         console.log('error')
         console.log(alertMsg)
         alertMsg.style.display = 'block'
-        // alertMsg.style.zIndex = '3'
     }
 }
 
@@ -214,7 +213,7 @@ const generateZones = (color) => {
 
 const generateError = () => {
     alertMsg.style.color = 'red'
-    alertMsg.append('Wrooong!')
+    alertMsg.innerText = 'Wrooong!'
     root.append(alertMsg)
 }
 
@@ -283,7 +282,6 @@ const finishGame = (bool = false) => {
 
     alertMsg.style.display = 'block'
     root.append(alertMsg)
-    apdateLeaderbord();
 }
 
 
