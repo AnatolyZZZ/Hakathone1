@@ -58,9 +58,14 @@ body {
     display: none;
 }
 
+
 #info {
     background: yellow;
     width: 100px;
     /* height: 100px; */
     font-size: 45px;
-}
+
+.leaderbord {
+    display: inline-block;
+    background-color: white;
+
