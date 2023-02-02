@@ -254,6 +254,6 @@ const levelUp = () => {
 
 generateField()
 
-currentPoints = 15;
-apdateLeaderbord();
-console.log(leaders);
+// currentPoints = 15;
+// apdateLeaderbord();
+// console.log(leaders);
