@@ -9,8 +9,14 @@ function makeFly (obj) {
     obj.setAttribute("coordY", coordY);
     obj.setAttribute("velX", velX);
     obj.setAttribute("velY", velY);
-    const id = setInterval(moveObj, 20, obj);
-    obj.setAttribute("interval", id);
+
+    let speed = levelsMap[currentLevel].speed;
+    
+    speed = Math.floor(20/speed);
+    console.log(`speed: ${speed}`);
+    
+    const id = setInterval(moveObj, speed, obj);
+    obj.setAttribute("interval", id);   
 }
 
 function moveObj (obj) {
@@ -22,15 +28,19 @@ function moveObj (obj) {
     x += vX;
     y += vY;
 
-    if (x <= 0 || x >= 400)  {
+    const objWidth = getComputedStyle(obj).width.slice(0, -2);
+    const rootWidth = getComputedStyle(root).width.slice(0, -2);
+    // console.log(objWidth);
+
+    if (x <= 0 || x >= rootWidth-objWidth)  {
         vX = -vX;
-        console.log(`coordinate x ${x} speed vX ${vX}`);
-        console.log(`coordinate y ${y} speed vY ${vY}`);
+        // console.log(`coordinate x ${x} speed vX ${vX}`);
+        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
-    if (y <= 0 || y >= 400)  {
+    if (y <= 0 || y >= rootWidth-objWidth)  {
         vY = -vY;
-        console.log(`coordinate x ${x} speed vX ${vX}`);
-        console.log(`coordinate y ${y} speed vY ${vY}`);
+        // console.log(`coordinate x ${x} speed vX ${vX}`);
+        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
     obj.style.left = `${x}px`;
@@ -52,14 +62,17 @@ const levelsMap = {
     1: {
         colorsAmt: 1,
         boxesAmt: 1,
+        speed: 1
     },
     2: {
         colorsAmt: 2,
-        boxesAmt: 1
+        boxesAmt: 1,
+        speed: 2
     },
     3: {
         colorsAmt: 2,
-        boxesAmt: 2
+        boxesAmt: 2,
+        speed: 3
     },
 }
 
@@ -114,11 +127,12 @@ const generateBoxes = (color, amount) => {
         boxesId++
         box.setAttribute('draggable', true)
 
-        makeFly(box);
+        
 
         box.addEventListener('dragstart', onDragStart)
 
         root.append(box)
+        makeFly(box);
     }
 }
 
