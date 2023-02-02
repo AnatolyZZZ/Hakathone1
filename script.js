@@ -1,27 +1,48 @@
 
 function makeFly (obj) {
-    // const newBox = document.createElement('div');
     let roundN = 5;
-    let coordX = 0;
-    let coordY = 0;
+    let coordX = 10;
+    let coordY = 10;
     let velX = Math.floor(Math.random() * roundN - 2);
     let velY = Math.floor(Math.random() * roundN - 2);
     obj.setAttribute("coordX", coordX);
     obj.setAttribute("coordY", coordY);
     obj.setAttribute("velX", velX);
     obj.setAttribute("velY", velY);
-    obj.setAttribute("interval", setInterval(move(obj), 1));
+    const id = setInterval(moveObj, 20, obj);
+    obj.setAttribute("interval", id);
 }
 
-function move (obj) {
-    obj.coordX += obj.velX;
-    obj.coordY += obj.velY;
-    obj.style.left = `${obj.coordX}px`;
-    obj.style.top =  `${obj.coordY}px`;
-    if (obj.coordX <= 0 || obj.coordX >= 500)  {
-        obj
+function moveObj (obj) {
+    let x = +obj.getAttribute("coordX");
+    let y = +obj.getAttribute("coordY");
+    let vX = +obj.getAttribute("velX");
+    let vY = +obj.getAttribute("velY");
+
+    x += vX;
+    y += vY;
+
+    if (x <= 0 || x >= 400)  {
+        vX = -vX;
+        console.log(`coordinate x ${x} speed vX ${vX}`);
+        console.log(`coordinate y ${y} speed vY ${vY}`);
     }
+    if (y <= 0 || y >= 400)  {
+        vY = -vY;
+        console.log(`coordinate x ${x} speed vX ${vX}`);
+        console.log(`coordinate y ${y} speed vY ${vY}`);
+    }
+
+    obj.style.left = `${x}px`;
+    obj.style.top =  `${y}px`;
+
+    obj.setAttribute("coordY", y);
+    obj.setAttribute("coordX", x);
+    obj.setAttribute("velY", vY);
+    obj.setAttribute("velX", vX);
+
 }
+
 
 const root = document.getElementById('root')
 
@@ -51,6 +72,7 @@ const generateBoxes = () => {
         box.classList.add('box')
         box.setAttribute('id', i)
         box.setAttribute('draggable', true)
+        makeFly(box);
         
         box.addEventListener('dragstart', onDragStart)
         
