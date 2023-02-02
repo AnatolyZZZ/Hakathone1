@@ -1,5 +1,4 @@
-
-function makeFly (obj) {
+function makeFly(obj) {
     let roundN = 5;
     let coordX = 10;
     let coordY = 10;
@@ -13,7 +12,7 @@ function makeFly (obj) {
     obj.setAttribute("interval", id);
 }
 
-function moveObj (obj) {
+function moveObj(obj) {
     let x = +obj.getAttribute("coordX");
     let y = +obj.getAttribute("coordY");
     let vX = +obj.getAttribute("velX");
@@ -22,19 +21,19 @@ function moveObj (obj) {
     x += vX;
     y += vY;
 
-    if (x <= 0 || x >= 400)  {
+    if (x <= 0 || x >= 400) {
         vX = -vX;
-        console.log(`coordinate x ${x} speed vX ${vX}`);
-        console.log(`coordinate y ${y} speed vY ${vY}`);
+        // console.log(`coordinate x ${x} speed vX ${vX}`);
+        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
-    if (y <= 0 || y >= 400)  {
+    if (y <= 0 || y >= 400) {
         vY = -vY;
-        console.log(`coordinate x ${x} speed vX ${vX}`);
-        console.log(`coordinate y ${y} speed vY ${vY}`);
+        // console.log(`coordinate x ${x} speed vX ${vX}`);
+        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
     obj.style.left = `${x}px`;
-    obj.style.top =  `${y}px`;
+    obj.style.top = `${y}px`;
 
     obj.setAttribute("coordY", y);
     obj.setAttribute("coordX", x);
@@ -89,13 +88,18 @@ const onDrop = (e) => {
     let parent = e.currentTarget
     let child = document.getElementById(data)
     if (parent.dataset.zoneColor === child.dataset.boxColor) {
+        clearInterval(child.getAttribute('interval'))
+        child.style.position = 'relative'
+        child.style.left = '0px'
+        child.style.top = '0px'
+
         child.setAttribute('draggable', false)
         child.classList.add('dropped')
         parent.appendChild(child)
         currentPoints++
         console.log(levelsMap[currentLevel])
-        if(currentPoints === levelsMap[currentLevel].boxesAmt*levelsMap[currentLevel].colorsAmt){
-                console.log('level finished')
+        if (currentPoints === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
+            console.log('level finished')
             levelUp()
         }
         points.innerText = currentPoints
@@ -113,12 +117,10 @@ const generateBoxes = (color, amount) => {
         box.setAttribute('data-box-color', color)
         boxesId++
         box.setAttribute('draggable', true)
-
-        makeFly(box);
-
         box.addEventListener('dragstart', onDragStart)
 
         root.append(box)
+        makeFly(box)
     }
 }
 
@@ -142,7 +144,7 @@ const createError = () => {
 
 
 const generateField = () => {
-    const {colorsAmt, boxesAmt} = levelsMap[currentLevel]
+    const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
 
     for (let i = 0; i < colorsAmt; i++) {
         let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
@@ -151,6 +153,7 @@ const generateField = () => {
         generateZones(color)
     }
     generatePointsAndLevel()
+    createError()
 }
 
 
@@ -165,14 +168,13 @@ const generatePointsAndLevel = () => {
 
 const levelUp = () => {
     currentLevel++
-    if(!levelsMap[currentLevel]){
+    if (!levelsMap[currentLevel]) {
         console.log('you won the game!')
     } else {
-    currentPoints = 0
-    root.innerHTML = ''
-    generateField(4)}
+        currentPoints = 0
+        root.innerHTML = ''
+        generateField(4)
+    }
 }
 
 generateField()
-
-createError()
