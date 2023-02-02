@@ -15,7 +15,7 @@ function makeFly (obj) {
     speed = Math.floor(20/speed);
     console.log(`speed: ${speed}`);
     
-    const id = setInterval(moveObj, 20, obj);
+    const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);   
 }
 
