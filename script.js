@@ -16,7 +16,7 @@ function makeFly(obj) {
     let speed = levelsMap[currentLevel].speed;
     
     speed = Math.floor(20/speed);
-    console.log(`speed: ${speed}`);
+    // console.log(`speed: ${speed}`);
     
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);   
@@ -87,10 +87,16 @@ function moveObj(obj) {
 
 
 const root = document.getElementById('root')
+
+const alertMsg = document.createElement('p')
+alertMsg.classList.add('alert')
+
 const leaderbord = document.getElementById("leaderbord")
-const error = document.createElement('p')
+
 const points = document.createElement('p')
 const level = document.createElement('p')
+const counter = document.createElement('p')
+const info = document.getElementById('info')
 const levelsMap = {
     1: {
         colorsAmt: 1,
@@ -109,7 +115,8 @@ const levelsMap = {
     },
 }
 
-leaders = [
+
+const leaders = [
     {
         player: "Boris",
         points: 20
@@ -132,13 +139,13 @@ leaders = [
     }
 ]
 
-let boxesId = 0
 let currentLevel = 1
 let currentPoints = 0
+let boxesId = 0
+let countDownId
 
 const onDragStart = (e) => {
-    console.log(e.target.id)
-    error.style.display = 'none'
+    alertMsg.style.display = 'none'
     e.dataTransfer.setData("text/plain", e.target.id)
 }
 
@@ -174,7 +181,7 @@ const onDrop = (e) => {
         }
         points.innerText = currentPoints
     } else {
-        error.style.display = 'block'
+        alertMsg.style.display = 'block'
     }
 }
 
@@ -188,7 +195,7 @@ const generateBoxes = (color, amount) => {
         boxesId++
         box.setAttribute('draggable', true)
 
-        box.addEventListener('dragstart', onDragStart)
+        box.addEventListener('dragstart', onDragStart, true)
 
         root.append(box)
         makeFly(box)
@@ -208,43 +215,40 @@ const generateZones = (color) => {
     root.append(zone)
 }
 
-const createError = () => {
-    error.classList.add('error')
-    error.append('Wrooong!')
-    root.append(error)
+const generateError = () => {
+    alertMsg.style.color = 'red'
+    alertMsg.append('Wrooong!')
+    root.append(alertMsg)
 }
 
 
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
-
+    boxesId = 0
     for (let i = 0; i < colorsAmt; i++) {
         let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
         generateBoxes(color, boxesAmt)
         generateZones(color)
     }
-    generatePointsAndLevel()
-    createError()
+    generateInfo()
+    generateError()
+    let id = countDown()
 }
 
 
-const generatePointsAndLevel = () => {
-    points.classList.add('points')
+const generateInfo = () => {
     points.innerText = currentPoints
-    root.append(points)
-
-    level.classList.add('level')
     level.innerText = currentLevel
-    root.append(level)
-
-      
+    counter.innerText = '00:30'
+    info.append(points, level, counter)
 }
 
 
 const levelUp = () => {
     currentLevel++
     if (!levelsMap[currentLevel]) {
-        console.log('you won the game!')
+        clearInterval(countDownId)
+        finishGame(true)
     } else {
         currentPoints = 0
         root.innerHTML = ''
@@ -252,8 +256,35 @@ const levelUp = () => {
     }
 }
 
+
+const countDown = () => {
+    clearInterval(countDownId)
+    let x = 30
+    countDownId = setInterval(()=>{
+        if(x < 0){
+            finishGame()
+            clearInterval(countDownId)
+            return
+        } else {
+            counter.innerText = `00:${x < 10 ? '0': ''}${x}`
+            x--
+        }
+    }, 1000)
+}
+
+const finishGame = (bool = false) => {
+    root.innerHTML = ''
+    if(bool){
+        alertMsg.innerText = 'You won'
+        alertMsg.style.color = 'green'
+    } else {
+        alertMsg.innerText = 'You lost'
+        alertMsg.style.color = 'red'
+    }
+    
+    alertMsg.style.display = 'block'
+    root.append(alertMsg)
+}
+
 generateField()
 
-// currentPoints = 15;
-// apdateLeaderbord();
-// console.log(leaders);
