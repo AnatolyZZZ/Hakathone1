@@ -15,11 +15,12 @@ const onDragOver = (e) => {
 const onDrop = (e) => {
     e.preventDefault()
     let data = e.dataTransfer.getData("text/plain");
+    
     // checking if target is correct zone
     // console.log(e.eventPhase)
     // console.log(e.target)
     // console.log(e.currentTarget)
-    
+
     let parent = e.currentTarget
     let child = document.getElementById(data)
     if (parent.dataset.zoneColor === child.dataset.boxColor) {
@@ -31,8 +32,8 @@ const onDrop = (e) => {
     }
 }
 
-const generateBoxes = (color) => {
-    for (let i = 0; i < 2; i++) {
+const generateBoxes = (color, amount) => {
+    for (let i = 0; i < amount; i++) {
         const box = document.createElement('div')
         box.classList.add('box')
         box.style.background = color
@@ -65,8 +66,13 @@ const createError = () => {
     root.append(error)
 }
 
-generateBoxes('red')
-generateBoxes('green')
-generateZones('red')
-generateZones('green')
+
+const generateField = (numOfColors) => {
+    for (let i = 0; i < numOfColors; i++) {
+        let color = `#${(Math.random()*0xFFFFFF<<0).toString(16)}`
+        generateBoxes(color, 3)
+        generateZones(color)
+    }
+}
+generateField(3)
 createError()
