@@ -5,6 +5,7 @@
 body {
     background: gray;
     padding: 20px;
+    display: flex;
 }
 
 .container {
@@ -65,4 +66,9 @@ body {
     font-size: 50px;
     top: 0;
     left: -50px;
+}
+
+.leaderbord {
+    display: inline-block;
+    background-color: white;
 }
