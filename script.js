@@ -8,19 +8,19 @@ function makeFly(obj) {
         velX = 1;
         velY = 1;
     }
-    
+
     obj.setAttribute("coordX", coordX);
     obj.setAttribute("coordY", coordY);
     obj.setAttribute("velX", velX);
     obj.setAttribute("velY", velY);
 
     let speed = levelsMap[currentLevel].speed;
-    
-    speed = Math.floor(20/speed);
+
+    speed = Math.floor(20 / speed);
     // console.log(`speed: ${speed}`);
-    
+
     const id = setInterval(moveObj, speed, obj);
-    obj.setAttribute("interval", id);   
+    obj.setAttribute("interval", id);
 }
 function renderLeaderbord () {
     leaderbord.innerHTML = "";
@@ -36,7 +36,7 @@ function renderLeaderbord () {
     }
 }
 
-function apdateLeaderbord () {
+function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
             let playerName = prompt("You are one of leaders!!! Please enter your name.");
@@ -48,8 +48,8 @@ function apdateLeaderbord () {
             break;
         }
     }
+
     renderLeaderbord();
-    
 }
 
 
@@ -70,11 +70,12 @@ function moveObj(obj) {
     const rootHeight = rootStyle.height.slice(0, -2);
     // console.log(objWidth);
 
-    if (x <= 0 || x >= rootWidth-objWidth)  {
+    if (x <= 0 || x >= rootWidth - objWidth) {
         vX = -vX;
         // console.log(`coordinate x ${x} speed vX ${vX}`);
         // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
+
 
     if (y <= 0 || y >= rootHeight-objHeight)  {
         vY = -vY;
@@ -104,23 +105,7 @@ const points = document.createElement('p')
 const level = document.createElement('p')
 const counter = document.createElement('p')
 const info = document.getElementById('info')
-const levelsMap = {
-    1: {
-        colorsAmt: 1,
-        boxesAmt: 1,
-        speed: 1
-    },
-    2: {
-        colorsAmt: 2,
-        boxesAmt: 1,
-        speed: 2
-    },
-    3: {
-        colorsAmt: 2,
-        boxesAmt: 2,
-        speed: 3
-    },
-}
+const levelsMap = {}
 
 
 const leaders = [
@@ -148,6 +133,7 @@ const leaders = [
 
 let currentLevel = 1
 let currentPoints = 0
+let droppedBoxes = 0
 let boxesId = 0
 let countDownId
 
@@ -181,14 +167,18 @@ const onDrop = (e) => {
         child.classList.add('dropped')
         parent.appendChild(child)
         currentPoints++
+        droppedBoxes++
         console.log(levelsMap[currentLevel])
-        if (currentPoints === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
+        if (droppedBoxes === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
             console.log('level finished')
             levelUp()
         }
         points.innerText = currentPoints
     } else {
+        console.log('error')
+        console.log(alertMsg)
         alertMsg.style.display = 'block'
+        // alertMsg.style.zIndex = '3'
     }
 }
 
@@ -231,18 +221,17 @@ const generateError = () => {
 
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
+    countDown()
+    generateError()
     boxesId = 0
     for (let i = 0; i < colorsAmt; i++) {
         let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
         generateBoxes(color, boxesAmt)
         generateZones(color)
     }
-    generateInfo()
-    generateError()
-    renderLeaderbord()
-    let id = countDown()
-}
 
+    renderLeaderbord()
+}
 
 const generateInfo = () => {
     points.innerText = currentPoints
@@ -258,9 +247,9 @@ const levelUp = () => {
         clearInterval(countDownId)
         finishGame(true)
     } else {
-        currentPoints = 0
+        droppedBoxes = 0
         root.innerHTML = ''
-        generateField(4)
+        generateField()
     }
 }
 
@@ -268,13 +257,13 @@ const levelUp = () => {
 const countDown = () => {
     clearInterval(countDownId)
     let x = 30
-    countDownId = setInterval(()=>{
-        if(x < 0){
+    countDownId = setInterval(() => {
+        if (x < 0) {
             finishGame()
             clearInterval(countDownId)
             return
         } else {
-            counter.innerText = `00:${x < 10 ? '0': ''}${x}`
+            counter.innerText = `00:${x < 10 ? '0' : ''}${x}`
             x--
         }
     }, 1000)
@@ -282,18 +271,43 @@ const countDown = () => {
 
 const finishGame = (bool = false) => {
     root.innerHTML = ''
-    if(bool){
+    if (bool) {
         alertMsg.innerText = 'You won'
         alertMsg.style.color = 'green'
     } else {
         alertMsg.innerText = 'You lost'
         alertMsg.style.color = 'red'
     }
-    
+
+    updateLeaderboard()
+
     alertMsg.style.display = 'block'
     root.append(alertMsg)
     apdateLeaderbord();
 }
 
-generateField()
 
+
+const start = () => {
+    generateLevels()
+    generateField()
+    generateInfo()
+}
+
+
+const generateLevels = () => {
+    let level = 1
+    for (let i = 1; i <= 4; i++) {
+        for (let j = 0; j <= 4; j++) {
+            levelsMap[level] = {
+                colorsAmt: j + i,
+                boxesAmt: 2 * i,
+                speed: 1 * i
+            }
+            level++
+        }
+    }
+}
+
+
+start()
