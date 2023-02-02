@@ -17,12 +17,14 @@ body {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+    flex-wrap: wrap;
 }
 
 .box {
     height: 100px;
     width: 100px;
     background: yellow;
+    border: 1px solid black;
     margin: 5px;
     align-self: flex-start;
     position: absolute;
@@ -41,4 +43,12 @@ body {
 .dropped {
     height: 50px;
     width: 50px;
+}
+
+.error {
+    position: absolute;
+    display: none;
+    color: red;
+    top: 250px;
+    left: 250px;
 }
