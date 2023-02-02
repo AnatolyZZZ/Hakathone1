@@ -3,26 +3,26 @@ function makeFly(obj) {
     let coordX = 10;
     let coordY = 10;
     let velX = Math.floor(Math.random() * roundN - 2);
+    let velY = Math.floor(Math.random() * roundN - 2);
     if (velX === 0 && velY === 0) {
         velX = 1;
         velY = 1;
     }
-    let velY = Math.floor(Math.random() * roundN - 2);
     obj.setAttribute("coordX", coordX);
     obj.setAttribute("coordY", coordY);
     obj.setAttribute("velX", velX);
     obj.setAttribute("velY", velY);
 
     let speed = levelsMap[currentLevel].speed;
-    
-    speed = Math.floor(20/speed);
+
+    speed = Math.floor(20 / speed);
     // console.log(`speed: ${speed}`);
-    
+
     const id = setInterval(moveObj, speed, obj);
-    obj.setAttribute("interval", id);   
+    obj.setAttribute("interval", id);
 }
 
-function apdateLeaderbord () {
+function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
             let playerName = prompt("Please enter your name");
@@ -42,7 +42,7 @@ function apdateLeaderbord () {
     for (let j = 0; j < 5; j++) {
         const newLeaderDiv = document.createElement("div");
         newLeaderDiv.classList.add("name");
-        const content = document.createTextNode(`${j+1} ${leaders[j].player} ${leaders[j].points}pt`);
+        const content = document.createTextNode(`${j + 1} ${leaders[j].player} ${leaders[j].points}pt`);
         newLeaderDiv.appendChild(content);
         leaderbord.appendChild(newLeaderDiv);
     }
@@ -63,13 +63,13 @@ function moveObj(obj) {
     const rootWidth = getComputedStyle(root).width.slice(0, -2);
     // console.log(objWidth);
 
-    if (x <= 0 || x >= rootWidth-objWidth)  {
+    if (x <= 0 || x >= rootWidth - objWidth) {
         vX = -vX;
         // console.log(`coordinate x ${x} speed vX ${vX}`);
         // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
-    if (y <= 0 || y >= rootWidth-objWidth)  {
+    if (y <= 0 || y >= rootWidth - objWidth) {
         vY = -vY;
         // console.log(`coordinate x ${x} speed vX ${vX}`);
         // console.log(`coordinate y ${y} speed vY ${vY}`);
@@ -98,21 +98,21 @@ const level = document.createElement('p')
 const counter = document.createElement('p')
 const info = document.getElementById('info')
 const levelsMap = {
-    1: {
-        colorsAmt: 1,
-        boxesAmt: 1,
-        speed: 1
-    },
-    2: {
-        colorsAmt: 2,
-        boxesAmt: 1,
-        speed: 2
-    },
-    3: {
-        colorsAmt: 2,
-        boxesAmt: 2,
-        speed: 3
-    },
+    // 1: {
+    //     colorsAmt: 1,
+    //     boxesAmt: 1,
+    //     speed: 1
+    // },
+    // 2: {
+    //     colorsAmt: 2,
+    //     boxesAmt: 1,
+    //     speed: 2
+    // },
+    // 3: {
+    //     colorsAmt: 2,
+    //     boxesAmt: 2,
+    //     speed: 3
+    // },
 }
 
 
@@ -230,11 +230,7 @@ const generateField = () => {
         generateBoxes(color, boxesAmt)
         generateZones(color)
     }
-    generateInfo()
-    generateError()
-    let id = countDown()
 }
-
 
 const generateInfo = () => {
     points.innerText = currentPoints
@@ -260,13 +256,13 @@ const levelUp = () => {
 const countDown = () => {
     clearInterval(countDownId)
     let x = 30
-    countDownId = setInterval(()=>{
-        if(x < 0){
+    countDownId = setInterval(() => {
+        if (x < 0) {
             finishGame()
             clearInterval(countDownId)
             return
         } else {
-            counter.innerText = `00:${x < 10 ? '0': ''}${x}`
+            counter.innerText = `00:${x < 10 ? '0' : ''}${x}`
             x--
         }
     }, 1000)
@@ -274,17 +270,46 @@ const countDown = () => {
 
 const finishGame = (bool = false) => {
     root.innerHTML = ''
-    if(bool){
+    if (bool) {
         alertMsg.innerText = 'You won'
         alertMsg.style.color = 'green'
     } else {
         alertMsg.innerText = 'You lost'
         alertMsg.style.color = 'red'
     }
-    
+
+    updateLeaderboard()
+
     alertMsg.style.display = 'block'
     root.append(alertMsg)
 }
 
-generateField()
 
+
+const start = () => {
+    generateLevels()
+    generateField()
+    generateInfo()
+    generateError()
+    countDown()
+}
+
+
+const generateLevels = () => {
+    let level = 1
+    for (let i = 1; i <= 4; i++) {
+        for (let j = 0; j <= 4; j++) {
+            levelsMap[level] = {
+                colorsAmt: j + i,
+                boxesAmt: 2 * i,
+                speed: 1 * i
+            }
+            level++
+        }
+    }
+
+    console.log(levelsMap)
+}
+
+
+start()
