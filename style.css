@@ -27,6 +27,7 @@ body {
     border: 1px solid black;
     margin: 5px;
     align-self: flex-start;
+    position: absolute;
 }
 
 .zone {
