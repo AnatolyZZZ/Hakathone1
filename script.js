@@ -97,23 +97,7 @@ const points = document.createElement('p')
 const level = document.createElement('p')
 const counter = document.createElement('p')
 const info = document.getElementById('info')
-const levelsMap = {
-    // 1: {
-    //     colorsAmt: 1,
-    //     boxesAmt: 1,
-    //     speed: 1
-    // },
-    // 2: {
-    //     colorsAmt: 2,
-    //     boxesAmt: 1,
-    //     speed: 2
-    // },
-    // 3: {
-    //     colorsAmt: 2,
-    //     boxesAmt: 2,
-    //     speed: 3
-    // },
-}
+const levelsMap = {}
 
 
 const leaders = [
@@ -141,6 +125,7 @@ const leaders = [
 
 let currentLevel = 1
 let currentPoints = 0
+let droppedBoxes = 0
 let boxesId = 0
 let countDownId
 
@@ -174,14 +159,18 @@ const onDrop = (e) => {
         child.classList.add('dropped')
         parent.appendChild(child)
         currentPoints++
+        droppedBoxes++
         console.log(levelsMap[currentLevel])
-        if (currentPoints === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
+        if (droppedBoxes === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
             console.log('level finished')
             levelUp()
         }
         points.innerText = currentPoints
     } else {
+        console.log('error')
+        console.log(alertMsg)
         alertMsg.style.display = 'block'
+        // alertMsg.style.zIndex = '3'
     }
 }
 
@@ -224,6 +213,8 @@ const generateError = () => {
 
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
+    countDown()
+    generateError()
     boxesId = 0
     for (let i = 0; i < colorsAmt; i++) {
         let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
@@ -246,9 +237,9 @@ const levelUp = () => {
         clearInterval(countDownId)
         finishGame(true)
     } else {
-        currentPoints = 0
+        droppedBoxes = 0
         root.innerHTML = ''
-        generateField(4)
+        generateField()
     }
 }
 
@@ -290,8 +281,6 @@ const start = () => {
     generateLevels()
     generateField()
     generateInfo()
-    generateError()
-    countDown()
 }
 
 
@@ -307,8 +296,6 @@ const generateLevels = () => {
             level++
         }
     }
-
-    console.log(levelsMap)
 }
 
 
