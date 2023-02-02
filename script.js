@@ -8,6 +8,7 @@ function makeFly(obj) {
         velX = 1;
         velY = 1;
     }
+
     obj.setAttribute("coordX", coordX);
     obj.setAttribute("coordY", coordY);
     obj.setAttribute("velX", velX);
@@ -21,11 +22,24 @@ function makeFly(obj) {
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);
 }
+function renderLeaderbord () {
+    leaderbord.innerHTML = "";
+    const h2 = document.createElement("h2");
+    h2.appendChild(document.createTextNode("Leaders"));
+    leaderbord.appendChild(h2);
+    for (let j = 0; j < 5; j++) {
+        const newLeaderDiv = document.createElement("div");
+        newLeaderDiv.classList.add("name");
+        const content = document.createTextNode(`${j+1} ${leaders[j].player} ${leaders[j].points}pt`);
+        newLeaderDiv.appendChild(content);
+        leaderbord.appendChild(newLeaderDiv);
+    }
+}
 
 function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
-            let playerName = prompt("Please enter your name");
+            let playerName = prompt("You are one of leaders!!! Please enter your name.");
             const newLeader = {
                 player: playerName,
                 points: currentPoints,
@@ -35,17 +49,7 @@ function updateLeaderboard() {
         }
     }
 
-    leaderbord.innerHTML = "";
-    const h2 = document.createElement("h2");
-    h2.appendChild(document.createTextNode("Leaders"));
-    leaderbord.appendChild(h2);
-    for (let j = 0; j < 5; j++) {
-        const newLeaderDiv = document.createElement("div");
-        newLeaderDiv.classList.add("name");
-        const content = document.createTextNode(`${j + 1} ${leaders[j].player} ${leaders[j].points}pt`);
-        newLeaderDiv.appendChild(content);
-        leaderbord.appendChild(newLeaderDiv);
-    }
+    renderLeaderbord();
 }
 
 
@@ -58,9 +62,12 @@ function moveObj(obj) {
     x += vX;
     y += vY;
 
-
-    const objWidth = getComputedStyle(obj).width.slice(0, -2);
-    const rootWidth = getComputedStyle(root).width.slice(0, -2);
+    const objStyle = getComputedStyle(obj);
+    const rootStyle = getComputedStyle(root);
+    const objWidth = objStyle.width.slice(0, -2);
+    const rootWidth = rootStyle.width.slice(0, -2);
+    const objHeight = objStyle.height.slice(0, -2);
+    const rootHeight = rootStyle.height.slice(0, -2);
     // console.log(objWidth);
 
     if (x <= 0 || x >= rootWidth - objWidth) {
@@ -69,7 +76,8 @@ function moveObj(obj) {
         // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
-    if (y <= 0 || y >= rootWidth - objWidth) {
+
+    if (y <= 0 || y >= rootHeight-objHeight)  {
         vY = -vY;
         // console.log(`coordinate x ${x} speed vX ${vX}`);
         // console.log(`coordinate y ${y} speed vY ${vY}`);
@@ -221,6 +229,8 @@ const generateField = () => {
         generateBoxes(color, boxesAmt)
         generateZones(color)
     }
+
+    renderLeaderbord()
 }
 
 const generateInfo = () => {
@@ -273,6 +283,7 @@ const finishGame = (bool = false) => {
 
     alertMsg.style.display = 'block'
     root.append(alertMsg)
+    apdateLeaderbord();
 }
 
 
