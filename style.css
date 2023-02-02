@@ -34,7 +34,7 @@ body {
     margin: 5px;
     display: flex;
     flex-wrap: wrap;
-    /* gap: 5px; */
+    gap: 5px;
 }
 
 .dropped {
