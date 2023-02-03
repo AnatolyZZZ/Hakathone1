@@ -39,6 +39,8 @@ function renderLeaderbord() {
 function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
+            winner = true;
+            console.log(winner);
             let playerName = prompt("You are one of leaders!!! Please enter your name.");
             const newLeader = {
                 player: playerName,
@@ -137,6 +139,7 @@ let currentPoints = 0
 let droppedBoxes = 0
 let boxesId = 0
 let countDownId
+let winner = false;
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
@@ -228,6 +231,7 @@ const generateError = () => {
 
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
+    alertMsg.style.display = 'none';
     countDown()
     setTimeout(() => {
         root.innerHTML = ''
@@ -260,7 +264,7 @@ const levelUp = () => {
     currentLevel++
     if (!levelsMap[currentLevel]) {
         clearInterval(countDownId)
-        finishGame(true)
+        finishGame()
     } else {
         droppedBoxes = 0
         level.innerText = currentLevel
@@ -284,9 +288,10 @@ const countDown = () => {
     }, 1000)
 }
 
-const finishGame = (bool = false) => {
+const finishGame = () => {
+    updateLeaderboard();
     root.innerHTML = ''
-    if (bool) {
+    if (winner) {
         alertMsg.innerText = 'You won'
         alertMsg.style.color = 'green'
     } else {
@@ -294,10 +299,11 @@ const finishGame = (bool = false) => {
         alertMsg.style.color = 'red'
     }
 
-    updateLeaderboard()
+    
 
     alertMsg.style.display = 'block'
     root.append(alertMsg)
+    info.appendChild(startButton);
     startButton.classList.toggle("invisible");
 }
 
@@ -307,6 +313,7 @@ const start = () => {
     currentLevel = 1;
     currentPoints = 0;
     droppedBoxes = 0;
+    winner = false;
     generateLevels()
     generateField()
     generateInfo()
