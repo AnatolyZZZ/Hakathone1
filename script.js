@@ -242,10 +242,17 @@ const generateField = () => {
 }
 
 const generateInfo = () => {
+    const pointsLabel = document.createElement('p')
+    pointsLabel.innerText = 'points '
+    pointsLabel.classList.add('label')
+    const levelLabel = document.createElement('p')
+    levelLabel.innerText = 'level '
+    levelLabel.classList.add('label')
     points.innerText = currentPoints
     level.innerText = currentLevel
     counter.innerText = '00:30'
-    info.append(points, level, counter)
+    info.innerHTML = ''
+    info.append(levelLabel, level, pointsLabel, points, counter)
 }
 
 

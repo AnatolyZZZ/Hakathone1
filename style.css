@@ -37,7 +37,7 @@
 .zone {
     height: 100px;
     min-width: 100px;
-    max-width: 150px;
+    max-width: 50%;
     flex: 1 0;
     display: flex;
     flex-wrap: wrap;
@@ -69,7 +69,6 @@
     display: none;
 }
 
-
 .info {
     font-size: 35px;
 }
@@ -100,6 +99,10 @@
 
 .invisible {
     display: none;
+}
+
+.label {
+    font-size: 15px;
 }
 
 @keyframes boxshadow {
