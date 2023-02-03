@@ -100,6 +100,11 @@ const root = document.getElementById('root')
 
 const alertMsg = document.createElement('p')
 alertMsg.classList.add('alert')
+alertMsg.innerHTML=("In this game you have to catch each flying square box and drag it onto rectangle of the same color");
+alertMsg.style.color = 'black'
+alertMsg.style.display = "block";
+root.appendChild(alertMsg);
+
 
 const leaderbord = document.getElementById("leaderbord")
 
