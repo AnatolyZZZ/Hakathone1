@@ -1,3 +1,43 @@
+const root = document.getElementById('root')
+const alertMsg = document.createElement('p')
+const leaderbord = document.getElementById("leaderbord")
+const points = document.createElement('p')
+const level = document.createElement('p')
+const counter = document.createElement('p')
+const info = document.getElementById('info')
+const levelsMap = {}
+const startButton = document.createElement('button');
+
+const leaders = [
+    {
+        player: "Boris",
+        points: 20
+    },
+    {
+        player: "Anna",
+        points: 19
+    },
+    {
+        player: "Egor",
+        points: 10
+    },
+    {
+        player: "Victor",
+        points: 5
+    },
+    {
+        player: "Elan",
+        points: 3
+    }
+]
+
+let currentLevel = 1
+let currentPoints = 0
+let droppedBoxes = 0
+let boxesId = 0
+let countDownId
+let winner = false;
+
 function makeFly(obj) {
     let roundN = 5;
     let coordX = 10;
@@ -41,7 +81,7 @@ function updateLeaderboard() {
         if (leaders[j].points < currentPoints) {
             winner = true;
             console.log(winner);
-            let playerName = prompt("You are one of leaders!!! Please enter your name.");
+            let playerName = prompt(`You are #${j+1}!!! Please enter your name.`);
             const newLeader = {
                 player: playerName,
                 points: currentPoints,
@@ -96,55 +136,6 @@ function moveObj(obj) {
 }
 
 
-const root = document.getElementById('root')
-
-const alertMsg = document.createElement('p')
-alertMsg.classList.add('alert')
-alertMsg.innerHTML=("In this game you have to catch each flying square box and drag it onto rectangle of the same color");
-alertMsg.style.color = 'black'
-alertMsg.style.display = "block";
-root.appendChild(alertMsg);
-
-
-const leaderbord = document.getElementById("leaderbord")
-
-const points = document.createElement('p')
-const level = document.createElement('p')
-const counter = document.createElement('p')
-const info = document.getElementById('info')
-const levelsMap = {}
-const startButton = document.getElementById("startbtn");
-
-
-const leaders = [
-    {
-        player: "Boris",
-        points: 20
-    },
-    {
-        player: "Anna",
-        points: 19
-    },
-    {
-        player: "Egor",
-        points: 10
-    },
-    {
-        player: "Victor",
-        points: 5
-    },
-    {
-        player: "Elan",
-        points: 3
-    }
-]
-
-let currentLevel = 1
-let currentPoints = 0
-let droppedBoxes = 0
-let boxesId = 0
-let countDownId
-let winner = false;
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
@@ -163,31 +154,30 @@ const onDragOver = (e) => {
 const onDrop = (e) => {
     e.preventDefault()
     let data = e.dataTransfer.getData("text/plain");
-
-    // checking if target is correct zone
-    // console.log(e.eventPhase)
-    // console.log(e.target)
-    // console.log(e.currentTarget)
-
     let parent = e.currentTarget
     let child = document.getElementById(data)
+
     if (parent.dataset.zoneColor === child.dataset.boxColor) {
         clearInterval(child.getAttribute('interval'))
         child.setAttribute('draggable', false)
         child.classList.add('dropped')
         parent.appendChild(child)
+        child.removeEventListener('dragstart', onDragStart)
+        child.removeEventListener('dragend', onDragEnd)
+
         root.style.color = parent.dataset.zoneColor
         console.log(root.style.color)
         root.classList.add('glow')
         setTimeout(() => { root.classList.remove('glow') }, 1000)
+
         currentPoints++
         droppedBoxes++
-        console.log(levelsMap[currentLevel])
+        points.innerText = currentPoints
+    
         if (droppedBoxes === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
             console.log('level finished')
             levelUp()
         }
-        points.innerText = currentPoints
     } else {
         console.log('error')
         console.log(alertMsg)
@@ -304,11 +294,8 @@ const finishGame = () => {
         alertMsg.style.color = 'red'
     }
 
-    
-
     alertMsg.style.display = 'block'
-    root.append(alertMsg)
-    info.appendChild(startButton);
+    root.append(alertMsg, startButton)
     startButton.classList.toggle("invisible");
 }
 
@@ -342,3 +329,15 @@ const generateLevels = () => {
 }
 
 startButton.addEventListener("click", start);
+
+const generateOnboarding = () => {
+    alertMsg.classList.add('alert')
+    alertMsg.textContent = "In this game you have to catch each flying square box and drag it onto rectangle of the same color";
+    alertMsg.style.color = 'black'
+    alertMsg.style.display = "block";
+    startButton.classList.add('startbtn')
+    startButton.textContent = "Start new game";
+    root.append(alertMsg, startButton);
+}
+
+generateOnboarding()

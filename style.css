@@ -40,6 +40,7 @@
     max-width: 50%;
     flex: 1 0;
     display: flex;
+    align-content: flex-start;
     flex-wrap: wrap;
     gap: 2px;
 }
@@ -78,7 +79,7 @@
 }
 
 .pane {
-    background-color: white;
+    /* background-color: white; */
     padding: 20px;
     line-height: 1.5;
     z-index: 3;
@@ -90,11 +91,18 @@
     box-shadow: 0 0 0;
 }
 
-#startbtn {
+.startbtn {
+    position: absolute;
+    top: 75%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    text-transform: uppercase;
+    background: white;
     text-align: center;
     font-weight: bold;
     padding: 20px;
     border: 2px solid red;
+    font-family: 'Share Tech Mono', monospace;
 }
 
 .invisible {
