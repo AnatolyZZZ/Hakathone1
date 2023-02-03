@@ -258,6 +258,7 @@ const levelUp = () => {
         finishGame(true)
     } else {
         droppedBoxes = 0
+        level.innerText = currentLevel
         generateField()
     }
 }
