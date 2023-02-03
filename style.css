@@ -90,6 +90,17 @@
     animation: boxshadow 2s;
 }
 
+#startbtn {
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+    border: 2px solid red;
+}
+
+.invisible {
+    display: none;
+}
+
 @keyframes boxshadow {
     0% {
         box-shadow: 0 0 0;

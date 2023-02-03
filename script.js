@@ -106,6 +106,7 @@ const level = document.createElement('p')
 const counter = document.createElement('p')
 const info = document.getElementById('info')
 const levelsMap = {}
+const startButton = document.getElementById("startbtn");
 
 
 const leaders = [
@@ -293,15 +294,20 @@ const finishGame = (bool = false) => {
 
     alertMsg.style.display = 'block'
     root.append(alertMsg)
+    startButton.classList.toggle("invisible");
 }
 
 
 
 const start = () => {
+    currentLevel = 1;
+    currentPoints = 0;
+    droppedBoxes = 0;
     generateLevels()
     generateField()
     generateInfo()
     renderLeaderbord()
+    startButton.classList.toggle("invisible");
 }
 
 
@@ -319,5 +325,4 @@ const generateLevels = () => {
     }
 }
 
-
-start()
+startButton.addEventListener("click", start);
