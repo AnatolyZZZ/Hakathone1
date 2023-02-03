@@ -143,6 +143,7 @@ const onDragStart = (e) => {
     e.target.classList.toggle('dragged')
     e.dataTransfer.setData("text/plain", e.target.id)
 }
+
 const onDragEnd = (e) => {
     e.target.classList.toggle('dragged')
 }
@@ -164,16 +165,12 @@ const onDrop = (e) => {
     let child = document.getElementById(data)
     if (parent.dataset.zoneColor === child.dataset.boxColor) {
         clearInterval(child.getAttribute('interval'))
-        child.style.position = 'relative'
-        child.style.left = '0px'
-        child.style.top = '0px'
-
         child.setAttribute('draggable', false)
         child.classList.add('dropped')
         parent.appendChild(child)
-        root.style.transition = `color 2s ease-in`
-        root.classList.add('glow')
         root.style.color = parent.dataset.zoneColor
+        console.log(root.style.color)
+        root.classList.add('glow')
         setTimeout(() => { root.classList.remove('glow') }, 1000)
         currentPoints++
         droppedBoxes++
@@ -245,10 +242,17 @@ const generateField = () => {
 }
 
 const generateInfo = () => {
+    const pointsLabel = document.createElement('p')
+    pointsLabel.innerText = 'points '
+    pointsLabel.classList.add('label')
+    const levelLabel = document.createElement('p')
+    levelLabel.innerText = 'level '
+    levelLabel.classList.add('label')
     points.innerText = currentPoints
     level.innerText = currentLevel
     counter.innerText = '00:30'
-    info.append(points, level, counter)
+    info.innerHTML = ''
+    info.append(levelLabel, level, pointsLabel, points, counter)
 }
 
 
