@@ -22,7 +22,7 @@ function makeFly(obj) {
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);
 }
-function renderLeaderbord () {
+function renderLeaderbord() {
     leaderbord.innerHTML = "";
     const h2 = document.createElement("h2");
     h2.appendChild(document.createTextNode("Leaders"));
@@ -30,7 +30,7 @@ function renderLeaderbord () {
     for (let j = 0; j < 5; j++) {
         const newLeaderDiv = document.createElement("div");
         newLeaderDiv.classList.add("name");
-        const content = document.createTextNode(`${j+1} ${leaders[j].player} ${leaders[j].points}pt`);
+        const content = document.createTextNode(`${j + 1} ${leaders[j].player} ${leaders[j].points}pt`);
         newLeaderDiv.appendChild(content);
         leaderbord.appendChild(newLeaderDiv);
     }
@@ -77,7 +77,7 @@ function moveObj(obj) {
     }
 
 
-    if (y <= 0 || y >= rootHeight-objHeight)  {
+    if (y <= 0 || y >= rootHeight - objHeight) {
         vY = -vY;
         // console.log(`coordinate x ${x} speed vX ${vX}`);
         // console.log(`coordinate y ${y} speed vY ${vY}`);
@@ -139,7 +139,11 @@ let countDownId
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
+    e.target.classList.toggle('dragged')
     e.dataTransfer.setData("text/plain", e.target.id)
+}
+const onDragEnd = (e) => {
+    e.target.classList.toggle('dragged')
 }
 
 const onDragOver = (e) => {
@@ -166,6 +170,10 @@ const onDrop = (e) => {
         child.setAttribute('draggable', false)
         child.classList.add('dropped')
         parent.appendChild(child)
+        root.style.transition = `color 2s ease-in`
+        root.classList.add('glow')
+        root.style.color = parent.dataset.zoneColor
+        setTimeout(() => { root.classList.remove('glow') }, 1000)
         currentPoints++
         droppedBoxes++
         console.log(levelsMap[currentLevel])
@@ -186,12 +194,14 @@ const generateBoxes = (color, amount) => {
         const box = document.createElement('div')
         box.classList.add('box')
         box.style.background = color
+        box.style.boxShadow = `0 0 10px ${color}`
         box.setAttribute('id', boxesId)
         box.setAttribute('data-box-color', color)
         boxesId++
         box.setAttribute('draggable', true)
 
         box.addEventListener('dragstart', onDragStart, true)
+        box.addEventListener('dragend', onDragEnd, true)
 
         root.append(box)
         makeFly(box)
@@ -221,15 +231,16 @@ const generateError = () => {
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
     countDown()
-    generateError()
-    boxesId = 0
-    for (let i = 0; i < colorsAmt; i++) {
-        let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
-        generateBoxes(color, boxesAmt)
-        generateZones(color)
-    }
-
-    renderLeaderbord()
+    setTimeout(() => {
+        root.innerHTML = ''
+        generateError()
+        boxesId = 0
+        for (let i = 0; i < colorsAmt; i++) {
+            let color = `#${((Math.random() * 0xfffff * 100000).toString(16)).slice(0, 6)}`
+            generateBoxes(color, boxesAmt)
+            generateZones(color)
+        }
+    }, 1000)
 }
 
 const generateInfo = () => {
@@ -247,7 +258,6 @@ const levelUp = () => {
         finishGame(true)
     } else {
         droppedBoxes = 0
-        root.innerHTML = ''
         generateField()
     }
 }
@@ -290,6 +300,7 @@ const start = () => {
     generateLevels()
     generateField()
     generateInfo()
+    renderLeaderbord()
 }
 
 
