@@ -1,3 +1,41 @@
+const root = document.getElementById('root')
+const alertMsg = document.createElement('p')
+alertMsg.classList.add('alert')
+const leaderbord = document.getElementById("leaderbord")
+const points = document.createElement('p')
+const level = document.createElement('p')
+const counter = document.createElement('p')
+const info = document.getElementById('info')
+const levelsMap = {}
+const leaders = [
+    {
+        player: "Boris",
+        points: 20
+    },
+    {
+        player: "Anna",
+        points: 19
+    },
+    {
+        player: "Egor",
+        points: 10
+    },
+    {
+        player: "Victor",
+        points: 5
+    },
+    {
+        player: "Elan",
+        points: 3
+    }
+]
+
+let currentLevel = 1
+let currentPoints = 0
+let droppedBoxes = 0
+let boxesId = 0
+let countDownId
+
 function makeFly(obj) {
     let roundN = 5;
     let coordX = 10;
@@ -94,54 +132,13 @@ function moveObj(obj) {
 }
 
 
-const root = document.getElementById('root')
-
-const alertMsg = document.createElement('p')
-alertMsg.classList.add('alert')
-
-const leaderbord = document.getElementById("leaderbord")
-
-const points = document.createElement('p')
-const level = document.createElement('p')
-const counter = document.createElement('p')
-const info = document.getElementById('info')
-const levelsMap = {}
-
-
-const leaders = [
-    {
-        player: "Boris",
-        points: 20
-    },
-    {
-        player: "Anna",
-        points: 19
-    },
-    {
-        player: "Egor",
-        points: 10
-    },
-    {
-        player: "Victor",
-        points: 5
-    },
-    {
-        player: "Elan",
-        points: 3
-    }
-]
-
-let currentLevel = 1
-let currentPoints = 0
-let droppedBoxes = 0
-let boxesId = 0
-let countDownId
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
     e.target.classList.toggle('dragged')
     e.dataTransfer.setData("text/plain", e.target.id)
 }
+
 const onDragEnd = (e) => {
     e.target.classList.toggle('dragged')
 }
@@ -163,16 +160,12 @@ const onDrop = (e) => {
     let child = document.getElementById(data)
     if (parent.dataset.zoneColor === child.dataset.boxColor) {
         clearInterval(child.getAttribute('interval'))
-        child.style.position = 'relative'
-        child.style.left = '0px'
-        child.style.top = '0px'
-
         child.setAttribute('draggable', false)
         child.classList.add('dropped')
         parent.appendChild(child)
-        root.style.transition = `color 2s ease-in`
-        root.classList.add('glow')
         root.style.color = parent.dataset.zoneColor
+        console.log(root.style.color)
+        root.classList.add('glow')
         setTimeout(() => { root.classList.remove('glow') }, 1000)
         currentPoints++
         droppedBoxes++
