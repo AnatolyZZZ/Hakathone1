@@ -57,11 +57,10 @@ function makeFly(obj) {
     let speed = levelsMap[currentLevel].speed;
 
     speed = Math.floor(20 / speed);
-    // console.log(`speed: ${speed}`);
-
     const id = setInterval(moveObj, speed, obj);
     obj.setAttribute("interval", id);
 }
+
 function renderLeaderbord() {
     leaderbord.innerHTML = "";
     const h2 = document.createElement("h2");
@@ -80,8 +79,7 @@ function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
             winner = true;
-            console.log(winner);
-            let playerName = prompt(`You are #${j+1}!!! Please enter your name.`);
+            let playerName = prompt(`You are #${j + 1}!!! Please enter your name.`);
             const newLeader = {
                 player: playerName,
                 points: currentPoints,
@@ -110,19 +108,13 @@ function moveObj(obj) {
     const rootWidth = rootStyle.width.slice(0, -2);
     const objHeight = objStyle.height.slice(0, -2);
     const rootHeight = rootStyle.height.slice(0, -2);
-    // console.log(objWidth);
 
     if (x <= 0 || x >= rootWidth - objWidth) {
         vX = -vX;
-        // console.log(`coordinate x ${x} speed vX ${vX}`);
-        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
-
 
     if (y <= 0 || y >= rootHeight - objHeight) {
         vY = -vY;
-        // console.log(`coordinate x ${x} speed vX ${vX}`);
-        // console.log(`coordinate y ${y} speed vY ${vY}`);
     }
 
     obj.style.left = `${x}px`;
@@ -166,21 +158,17 @@ const onDrop = (e) => {
         child.removeEventListener('dragend', onDragEnd)
 
         root.style.color = parent.dataset.zoneColor
-        console.log(root.style.color)
         root.classList.add('glow')
         setTimeout(() => { root.classList.remove('glow') }, 1000)
 
         currentPoints++
         droppedBoxes++
         points.innerText = currentPoints
-    
+
         if (droppedBoxes === levelsMap[currentLevel].boxesAmt * levelsMap[currentLevel].colorsAmt) {
-            console.log('level finished')
             levelUp()
         }
     } else {
-        console.log('error')
-        console.log(alertMsg)
         alertMsg.style.display = 'block'
     }
 }
@@ -244,9 +232,11 @@ const generateInfo = () => {
     const pointsLabel = document.createElement('p')
     pointsLabel.innerText = 'points '
     pointsLabel.classList.add('label')
+
     const levelLabel = document.createElement('p')
     levelLabel.innerText = 'level '
     levelLabel.classList.add('label')
+
     points.innerText = currentPoints
     level.innerText = currentLevel
     counter.innerText = '00:30'
@@ -287,10 +277,10 @@ const finishGame = () => {
     updateLeaderboard();
     root.innerHTML = ''
     if (winner) {
-        alertMsg.innerText = 'You won'
+        alertMsg.innerText = 'You won!'
         alertMsg.style.color = 'green'
     } else {
-        alertMsg.innerText = 'You lost'
+        alertMsg.innerText = 'You lost:('
         alertMsg.style.color = 'red'
     }
 
