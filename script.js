@@ -1,41 +1,3 @@
-const root = document.getElementById('root')
-const alertMsg = document.createElement('p')
-alertMsg.classList.add('alert')
-const leaderbord = document.getElementById("leaderbord")
-const points = document.createElement('p')
-const level = document.createElement('p')
-const counter = document.createElement('p')
-const info = document.getElementById('info')
-const levelsMap = {}
-const leaders = [
-    {
-        player: "Boris",
-        points: 20
-    },
-    {
-        player: "Anna",
-        points: 19
-    },
-    {
-        player: "Egor",
-        points: 10
-    },
-    {
-        player: "Victor",
-        points: 5
-    },
-    {
-        player: "Elan",
-        points: 3
-    }
-]
-
-let currentLevel = 1
-let currentPoints = 0
-let droppedBoxes = 0
-let boxesId = 0
-let countDownId
-
 function makeFly(obj) {
     let roundN = 5;
     let coordX = 10;
@@ -132,6 +94,49 @@ function moveObj(obj) {
 }
 
 
+const root = document.getElementById('root')
+
+const alertMsg = document.createElement('p')
+alertMsg.classList.add('alert')
+
+const leaderbord = document.getElementById("leaderbord")
+
+const points = document.createElement('p')
+const level = document.createElement('p')
+const counter = document.createElement('p')
+const info = document.getElementById('info')
+const levelsMap = {}
+const startButton = document.getElementById("startbtn");
+
+
+const leaders = [
+    {
+        player: "Boris",
+        points: 20
+    },
+    {
+        player: "Anna",
+        points: 19
+    },
+    {
+        player: "Egor",
+        points: 10
+    },
+    {
+        player: "Victor",
+        points: 5
+    },
+    {
+        player: "Elan",
+        points: 3
+    }
+]
+
+let currentLevel = 1
+let currentPoints = 0
+let droppedBoxes = 0
+let boxesId = 0
+let countDownId
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
@@ -286,15 +291,20 @@ const finishGame = (bool = false) => {
 
     alertMsg.style.display = 'block'
     root.append(alertMsg)
+    startButton.classList.toggle("invisible");
 }
 
 
 
 const start = () => {
+    currentLevel = 1;
+    currentPoints = 0;
+    droppedBoxes = 0;
     generateLevels()
     generateField()
     generateInfo()
     renderLeaderbord()
+    startButton.classList.toggle("invisible");
 }
 
 
@@ -312,5 +322,4 @@ const generateLevels = () => {
     }
 }
 
-
-start()
+startButton.addEventListener("click", start);
