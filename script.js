@@ -120,7 +120,8 @@ async function updateLeaderboard() {
                 player: playerName ? playerName : 'Anonymous',
                 points: currentPoints,
             }
-            leaders.splice(j, 1, newLeader);
+            leaders.splice(j, 0, newLeader);
+            leaders.pop();
             renderLeaderbord();
             break;
         }
