@@ -7,6 +7,11 @@ const counter = document.createElement('p')
 const info = document.getElementById('info')
 const levelsMap = {}
 const startButton = document.createElement('button');
+const dialog = document.createElement('dialog')
+const playerNameInp = document.createElement('input')
+let playerName
+const dialogButton = document.createElement('button')
+const dialogText = document.createElement('p')
 
 const leaders = [
     {
@@ -61,6 +66,32 @@ function makeFly(obj) {
     obj.setAttribute("interval", id);
 }
 
+const updateDialog = (j) => {
+    dialogText.textContent = `You are number ${j+1}! Wow! Congratulations! Please, enter your name`
+    root.append(dialog)
+}
+
+const createDialog = () => {
+    playerNameInp.setAttribute('type', 'text')
+    dialogButton.append('OK')
+    const form = document.createElement('form')
+    form.setAttribute('method', 'dialog')
+    form.append(playerNameInp, dialogButton)
+    dialog.append(dialogText)
+    dialog.append(form)
+    dialog.classList.add('dialog')
+}
+
+const showDialog = (j) => {
+    updateDialog(j)
+    dialog.showModal()
+    playerNameInp.addEventListener('change', () => { dialogButton.value = playerNameInp.value })
+    dialog.addEventListener('close', () => {
+        playerName = dialog.returnValue
+        playerNameInp.value = ''
+    });
+}
+
 function renderLeaderbord() {
     leaderbord.innerHTML = "";
     const h2 = document.createElement("h2");
@@ -75,23 +106,26 @@ function renderLeaderbord() {
     }
 }
 
-function updateLeaderboard() {
+async function updateLeaderboard() {
     for (let j = 0; j < 5; j++) {
         if (leaders[j].points < currentPoints) {
             winner = true;
-            let playerName = prompt(`You are #${j + 1}!!! Please enter your name.`);
+            showDialog(j)
+            await (async () => {
+                return new Promise((res) => {
+                    dialog.onclose = () => res(true);
+                });
+            })();
             const newLeader = {
-                player: playerName,
+                player: playerName ? playerName : 'Anonymous',
                 points: currentPoints,
             }
             leaders.splice(j, 1, newLeader);
+            renderLeaderbord();
             break;
         }
     }
-
-    renderLeaderbord();
 }
-
 
 function moveObj(obj) {
     let x = +obj.getAttribute("coordX");
@@ -126,8 +160,6 @@ function moveObj(obj) {
     obj.setAttribute("velX", vX);
 
 }
-
-
 
 const onDragStart = (e) => {
     alertMsg.style.display = 'none'
@@ -173,6 +205,20 @@ const onDrop = (e) => {
     }
 }
 
+const generateLevels = () => {
+    let level = 1
+    for (let i = 1; i <= 4; i++) {
+        for (let j = 0; j <= 4; j++) {
+            levelsMap[level] = {
+                colorsAmt: j + i,
+                boxesAmt: 2 * i,
+                speed: 1 * i
+            }
+            level++
+        }
+    }
+}
+
 const generateBoxes = (color, amount) => {
     for (let i = 0; i < amount; i++) {
         const box = document.createElement('div')
@@ -211,7 +257,6 @@ const generateError = () => {
     root.append(alertMsg)
 }
 
-
 const generateField = () => {
     const { colorsAmt, boxesAmt } = levelsMap[currentLevel]
     alertMsg.style.display = 'none';
@@ -244,20 +289,6 @@ const generateInfo = () => {
     info.append(levelLabel, level, pointsLabel, points, counter)
 }
 
-
-const levelUp = () => {
-    currentLevel++
-    if (!levelsMap[currentLevel]) {
-        clearInterval(countDownId)
-        finishGame()
-    } else {
-        droppedBoxes = 0
-        level.innerText = currentLevel
-        generateField()
-    }
-}
-
-
 const countDown = () => {
     clearInterval(countDownId)
     let x = 30
@@ -273,8 +304,20 @@ const countDown = () => {
     }, 1000)
 }
 
-const finishGame = () => {
-    updateLeaderboard();
+const levelUp = () => {
+    currentLevel++
+    if (!levelsMap[currentLevel]) {
+        clearInterval(countDownId)
+        finishGame()
+    } else {
+        droppedBoxes = 0
+        level.innerText = currentLevel
+        generateField()
+    }
+}
+
+const finishGame = async () => {
+    await updateLeaderboard();
     root.innerHTML = ''
     if (winner) {
         alertMsg.innerText = 'You won!'
@@ -289,8 +332,6 @@ const finishGame = () => {
     startButton.classList.toggle("invisible");
 }
 
-
-
 const start = () => {
     currentLevel = 1;
     currentPoints = 0;
@@ -303,21 +344,6 @@ const start = () => {
     startButton.classList.toggle("invisible");
 }
 
-
-const generateLevels = () => {
-    let level = 1
-    for (let i = 1; i <= 4; i++) {
-        for (let j = 0; j <= 4; j++) {
-            levelsMap[level] = {
-                colorsAmt: j + i,
-                boxesAmt: 2 * i,
-                speed: 1 * i
-            }
-            level++
-        }
-    }
-}
-
 startButton.addEventListener("click", start);
 
 const generateOnboarding = () => {
@@ -328,6 +354,7 @@ const generateOnboarding = () => {
     startButton.classList.add('startbtn')
     startButton.textContent = "Start new game";
     root.append(alertMsg, startButton);
+    createDialog()
 }
 
 generateOnboarding()
