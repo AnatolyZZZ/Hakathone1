@@ -291,7 +291,7 @@ const generateInfo = () => {
 
 const countDown = () => {
     clearInterval(countDownId)
-    let x = 10
+    let x = 30
     countDownId = setInterval(() => {
         if (x < 0) {
             finishGame()
