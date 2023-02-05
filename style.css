@@ -90,6 +90,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
+    max-width: 300px;
     padding: 10px;
     display: none;
 }
