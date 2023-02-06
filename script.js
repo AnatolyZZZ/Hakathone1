@@ -67,7 +67,7 @@ function makeFly(obj) {
 }
 
 const updateDialog = (j) => {
-    dialogText.textContent = `You are number ${j+1}! Wow! Congratulations! Please, enter your name`
+    dialogText.textContent = `You are number ${j + 1}! Wow! Congratulations! Please, enter your name`
     root.append(dialog)
 }
 
@@ -121,7 +121,9 @@ async function updateLeaderboard() {
                 points: currentPoints,
             }
             leaders.splice(j, 0, newLeader);
-            leaders.pop();
+
+            leaders.pop()
+
             renderLeaderbord();
             break;
         }
@@ -349,13 +351,24 @@ startButton.addEventListener("click", start);
 
 const generateOnboarding = () => {
     alertMsg.classList.add('alert')
-    alertMsg.textContent = "In this game you have to catch each flying square box and drag it onto rectangle of the same color";
     alertMsg.style.color = 'black'
     alertMsg.style.display = "block";
-    startButton.classList.add('startbtn')
-    startButton.textContent = "Start new game";
-    root.append(alertMsg, startButton);
-    createDialog()
+    if (navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)) {
+        alertMsg.textContent = "Sorry, freind, the game works only on desktop right now.";
+        root.append(alertMsg, startButton);
+    } else {
+        alertMsg.textContent = "In this game you have to catch each flying square box and drag it onto rectangle of the same color";
+        startButton.classList.add('startbtn')
+        startButton.textContent = "Start new game";
+        root.append(alertMsg, startButton);
+        createDialog()
+    }
 }
 
 generateOnboarding()
