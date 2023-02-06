@@ -121,7 +121,9 @@ async function updateLeaderboard() {
                 points: currentPoints,
             }
             leaders.splice(j, 0, newLeader);
+
             leaders.pop()
+
             renderLeaderbord();
             break;
         }
