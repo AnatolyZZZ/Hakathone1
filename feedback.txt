@@ -1,0 +1,7 @@
+This is a small drag and drop game.
+I am super impressed by the level of code.
+I can see that you really understand what you're writing.
+Good DRY code. Defining all your variables and elements from dom at the beggining of the script file.
+Checking which device is using the website too.
+Styling and gameplay is smooth!
+I love it! 
